@@ -1,0 +1,75 @@
+﻿#kind: Service
+#apiVersion: v1
+#metadata:
+#  name: svc-aks
+#  namespace: app
+#spec:
+#  selector:
+#    app: aksapi
+#  ports:
+#  - port: 80
+#  type: ClusterIP # LoadBalancer # NodePort # 
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: dep-aksapi
+#  namespace: app
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: aksapi
+#  template:
+#    metadata:
+#      labels:
+#        app: aksapi
+#    spec:
+#      containers:
+#      - name: aksapi
+#        image: acrsumit.azurecr.io/dockerk8sapi:20210721092032
+#        #env:
+#        #- name: ASPNETCORE_ENVIRONMENT
+#        #  value: Production
+#        #- name: ASPNETCORE_URLS
+#        #  value: http://+:80
+#        ports:
+#        - containerPort: 80
+#        #- containerPort: 443
+#        resources:
+#          limits:
+#            cpu: "0.10"
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-aksapi
+  namespace: app 
+spec:
+  selector:
+    matchLabels:
+      app: aksapitest
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aksapitest
+    spec:
+      containers:
+      - name: aksapitest
+        image: acrsumit.azurecr.io/dockerk8sapi:20210721092032
+        ports:
+        - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-aks
+  namespace: app
+spec:
+  selector:
+    app: aksapitest
+  ports:
+  - port: 80
+  type: ClusterIP # LoadBalancer # NodePort # 
